@@ -4,7 +4,7 @@ namespace Maxicare;
 
 use CURLFile;
 use Exception;
-use Maxicare\interface\FileUploadInterface;
+use Maxicare\Interface\FileUploadInterface;
 
 /**
  * Hubspot Impl

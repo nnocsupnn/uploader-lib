@@ -4,7 +4,7 @@ namespace Maxicare;
 
 use Exception;
 use InvalidArgumentException;
-use Maxicare\interface\FileUploadInterface;
+use Maxicare\Interface\FileUploadInterface;
 
 /**
  * 

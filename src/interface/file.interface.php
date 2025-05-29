@@ -1,6 +1,6 @@
 <?php
 
-namespace Maxicare\interface;
+namespace Maxicare\Interface;
 
 
 interface FileUploadInterface {
