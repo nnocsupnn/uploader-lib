@@ -26,7 +26,7 @@ HUBSPOT_API_KEY=
 HUBSPOT_API_FILEUPLOAD=
 ```
 ---
-### ℹ️ Installation [🔗 Packagist](https://packagist.org/packages/maxicare/oci-uploader)
+### ℹ️ Installation [🔗 Packagist](https://packagist.org/packages/maxicare/uploader)
 ```bash
 composer require maxicare/oci-uploader
 ```
