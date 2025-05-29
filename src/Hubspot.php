@@ -30,8 +30,7 @@ class Hubspot implements FileUploadInterface {
 
         $payload = array('file'=> new CURLFile($filePath), 'folderId' => $folderId, 'options' => json_encode($hubspotFileUploadOption));
         $headers = array(
-            'Authorization: Bearer ' . getenv('HUBSPOT_API_KEY') ?: null,
-            'Cookie: __cf_bm=SZYNy5EN8JjbAJYX3r4N.ZsG46D11bpKbOgxudAUwH0-1748503040-1.0.1.1-z_dDyBdoio76KEe_rED9uv7WeMZ9id6lx6UWJQHxqdhpHMlDKOcm09pZtItwI1jFTIt8hPDAsIxZ43Wfs6xabhCIpS8C5KUFB3C3G9GkL7s'
+            'Authorization: Bearer ' . getenv('HUBSPOT_API_KEY') ?: null
         );
 
         $fullUrl = getenv('HUBSPOT_API_FILEUPLOAD') ?: 'https://api.hubapi.com/files/v3/files';
