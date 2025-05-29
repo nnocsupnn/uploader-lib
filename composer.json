@@ -1,0 +1,38 @@
+{
+    "name": "maxicare/uploader",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "MIT",
+    "keywords": ["oci", "hubspot", "oracle", "cloud", "maxicare", "storage", "upload", "laravel"],
+    "autoload": {
+        "psr-4": {
+            "Maxicare\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "require": {
+        "php": "^8.0",
+        "ext-curl": "*",
+        "ext-openssl": "*",
+        "composer-plugin-api": "^2.0",
+        "illuminate/support": "^12.15"
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "authors": [
+        {
+            "name": "nnocsupnn",
+            "email": "nincas21@gmail.com"
+        }
+    ],
+    "extra": {
+        "class": "Maxicare\\Uploader"
+    },
+    
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
