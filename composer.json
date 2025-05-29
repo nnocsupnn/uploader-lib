@@ -1,7 +1,7 @@
 {
     "name": "maxicare/uploader",
     "type": "library",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "MIT",
     "keywords": ["oci", "hubspot", "oracle", "cloud", "maxicare", "storage", "upload", "laravel"],
     "autoload": {
@@ -29,10 +29,10 @@
             "email": "nincas21@gmail.com"
         }
     ],
+    "time": "2025-05-27",
     "extra": {
         "class": "Maxicare\\Uploader"
     },
-    
     "minimum-stability": "dev",
     "prefer-stable": true
 }

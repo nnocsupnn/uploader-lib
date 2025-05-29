@@ -4,6 +4,7 @@ namespace Maxicare;
 
 use Exception;
 use InvalidArgumentException;
+use Maxicare\interface\FileUploadInterface;
 
 /**
  * 
@@ -11,7 +12,7 @@ use InvalidArgumentException;
  * @author Nino Casupanan
  * @description C4C Uploader
  */
-class Uploader
+class OCI implements FileUploadInterface
 {
     private array $config;
     private array $requiredEnvVars = [
@@ -185,7 +186,7 @@ class Uploader
         
         $additionalHeaders = [
             'content-length' => $contentLength,
-            'content-type' => $this->getContentType($filename),
+            'content-type' => getContentType($filename),
             'x-content-sha256' => $contentSha256
         ];
 
@@ -208,7 +209,7 @@ class Uploader
             "x-content-sha256: {$contentSha256}"
         ];
 
-        return $this->executeCurlRequest($fullUrl, $method, $content, $headers);
+        return executeCurlRequest($fullUrl, $method, $content, $headers);
     }
 
     /**
@@ -262,7 +263,7 @@ class Uploader
             "Authorization: {$authHeader}"
         ];
 
-        return $this->executeCurlRequest($fullUrl, $method, null, $headers);
+        return executeCurlRequest($fullUrl, $method, null, $headers);
     }
 
     /**
@@ -294,7 +295,7 @@ class Uploader
             "Authorization: {$authHeader}"
         ];
 
-        return $this->executeCurlRequest($fullUrl, $method, null, $headers);
+        return executeCurlRequest($fullUrl, $method, null, $headers);
     }
 
     /**
@@ -329,85 +330,9 @@ class Uploader
             "Authorization: {$authHeader}"
         ];
 
-        return $this->executeCurlRequest($fullUrl, $method, null, $headers);
+        return executeCurlRequest($fullUrl, $method, null, $headers);
     }
 
-    /**
-     * Execute cURL request
-     */
-    private function executeCurlRequest(string $url, string $method, ?string $data, array $headers): array
-    {
-        $ch = curl_init();
-        
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $url,
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_SSL_VERIFYPEER => false, # to avoid issues
-            CURLOPT_TIMEOUT => 300,
-            CURLOPT_CONNECTTIMEOUT => 30
-        ]);
-
-        if ($data !== null) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        }
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($ch);
-        $curlInfo = curl_getinfo($ch);
-        
-        curl_close($ch);
-
-        if ($curlError) {
-            throw new Exception("cURL error: {$curlError}");
-        }
-
-        $result = [
-            'success' => $httpCode >= 200 && $httpCode < 300,
-            'status_code' => $httpCode,
-            'response' => $response,
-            'curl_info' => $curlInfo
-        ];
-
-        // Parse JSON response if applicable
-        if ($response && str_contains($curlInfo['content_type'] ?? '', 'json')) {
-            $decoded = json_decode($response, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $result['data'] = $decoded;
-            }
-        }
-
-        // Log results for debugging
-        logResult($method, $url, $result, __CLASS__);
-
-        return $result;
-    }
-
-    /**
-     * Determine content type based on file extension
-     */
-    private function getContentType(string $filename): string
-    {
-        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
-        $mimeTypes = [
-            'txt' => 'text/plain',
-            'json' => 'application/json',
-            'xml' => 'application/xml',
-            'pdf' => 'application/pdf',
-            'jpg' => 'image/jpeg',
-            'jpeg' => 'image/jpeg',
-            'png' => 'image/png',
-            'gif' => 'image/gif',
-            'zip' => 'application/zip',
-            'csv' => 'text/csv'
-        ];
-
-        return $mimeTypes[$extension] ?? 'application/octet-stream';
-    }
 
     /**
      * Get current configuration

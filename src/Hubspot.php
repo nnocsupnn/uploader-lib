@@ -4,15 +4,24 @@ namespace Maxicare;
 
 use CURLFile;
 use Exception;
+use Maxicare\interface\FileUploadInterface;
 
-class Hubspot {
+/**
+ * Hubspot Impl
+ * @author Nino Casupanan
+ * 
+ */
+class Hubspot implements FileUploadInterface {
 
     public function __construct() {
     }
 
+    /**
+     * Upload to hubspot
+     * 
+     * @reference https://developers.hubspot.com/docs/reference/api/library/files/v3#post-%2Ffiles%2Fv3%2Ffiles
+     */
     public function upload(String $filePath, String $folderId) {
-        $curl = curl_init();
-
         $hubspotFileUploadOption = [
             "access" => "PRIVATE",
             "overwrite" => true,
@@ -27,42 +36,13 @@ class Hubspot {
 
         $fullUrl = getenv('HUBSPOT_API_FILEUPLOAD') ?: 'https://api.hubapi.com/files/v3/files';
 
-        $curlOpt = array(
-            CURLOPT_URL => $fullUrl,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => $payload,
-            CURLOPT_HTTPHEADER => $headers,
-        );
+        $result = executeCurlRequest($fullUrl, "POST", $payload, $headers);
 
-        curl_setopt_array($curl, $curlOpt);
+        return $result;
+    }
 
-        $response = curl_exec($curl);
-        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        $curlError = curl_error($curl);
-        $curlInfo = curl_getinfo($curl);
 
-        $result = [
-            'success' => $httpCode >= 200 && $httpCode < 300,
-            'status_code' => $httpCode,
-            'response' => $response,
-            'curl_info' => $curlInfo
-        ];
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        if ($curlError) {
-            throw new Exception("cURL error: {$curlError}");
-        }
-
-        logResult('POST', $fullUrl, $result, __CLASS__);
-
-        return $response;
+    public function delete(String $fileId) {
+        // TODO
     }
 }
