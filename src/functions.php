@@ -113,7 +113,7 @@ function executeCurlRequest(string $url, string $method, string|array|null $data
     }
 
     // Log results for debugging
-    logResult($method, $url, $result, $args);
+    logResult($method, $url, $result, ...$args);
 
     return $result;
 }
