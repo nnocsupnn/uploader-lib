@@ -95,7 +95,7 @@ class OCI implements FileUploadInterface
         }
         
         // Otherwise, relative to Laravel base path
-        return base_path()() . DIRECTORY_SEPARATOR . $keyFile;
+        return get_base_path()() . DIRECTORY_SEPARATOR . $keyFile;
     }
 
     /**
