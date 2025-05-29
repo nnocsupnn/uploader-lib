@@ -4,7 +4,7 @@
 /**
  * Log operation results
  */
-function logResult(string $method, string $url, array $result): void
+function logResult(string $method, string $url, array $result, ...$args): void
 {
     $status = $result['success'] ? '✅' : '❌';
     $message = "{$status} {$method} {$url} - Status: {$result['status_code']}";
@@ -15,7 +15,7 @@ function logResult(string $method, string $url, array $result): void
 
     // Use Laravel's logger if available, otherwise echo
     if (function_exists('logger')) {
-        logger($message);
+        logger(join(" ", $args) . " - " . $message);
     } else {
         echo $message . "\n";
     }

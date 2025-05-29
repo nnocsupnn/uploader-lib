@@ -381,7 +381,7 @@ class Uploader
         }
 
         // Log results for debugging
-        logResult($method, $url, $result);
+        logResult($method, $url, $result, __CLASS__);
 
         return $result;
     }
