@@ -15,7 +15,7 @@ class Hubspot {
 
         $hubspotFileUploadOption = [
             "access" => "PRIVATE",
-            "overwrite" => false,
+            "overwrite" => true,
             "duplicateValidationStrategy" => "NONE"
         ];
 
