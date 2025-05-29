@@ -12,7 +12,7 @@ use Maxicare\interface\FileUploadInterface;
  * @author Nino Casupanan
  * @description C4C Uploader
  */
-class OCI implements FileUploadInterface
+class OCI implements FileUploadInterface 
 {
     private array $config;
     private array $requiredEnvVars = [
@@ -50,16 +50,14 @@ class OCI implements FileUploadInterface
         $this->config['OCI_BUCKETS_OCID'] = getenv('OCI_BUCKETS_OCID') ?: null;
     }
 
+
+    
+
     /**
      * Validate configuration and dependencies
      */
     private function validateConfiguration(): void
     {
-        // Check if Laravel's base_path() function exists
-        if (!function_exists('base_path')) {
-            throw new Exception("Laravel base_path() function not available");
-        }
-
         // Validate key file exists and is readable
         $keyPath = $this->getPrivateKeyPath();
         if (!file_exists($keyPath)) {
@@ -97,7 +95,7 @@ class OCI implements FileUploadInterface
         }
         
         // Otherwise, relative to Laravel base path
-        return base_path() . DIRECTORY_SEPARATOR . $keyFile;
+        return base_path()() . DIRECTORY_SEPARATOR . $keyFile;
     }
 
     /**

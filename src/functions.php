@@ -1,6 +1,24 @@
 <?php
 
 
+function base_path(): callable {
+    // Check if Laravel's base_path() function exists
+    if (function_exists('base_path')) {
+        return base_path(...);
+    } else {
+        throw new Exception("Laravel base_path() function not available");
+    }
+}
+
+function logger(): callable {
+    // Check if Laravel's logger() function exists
+    if (function_exists('base_path')) {
+        return logger(...);
+    } else {
+        throw new Exception("Laravel logger() function not available");
+    }
+}
+
 /**
  * Log operation results
  */
@@ -15,7 +33,7 @@ function logResult(string $method, string $url, array $result, ...$args): void
 
     // Use Laravel's logger if available, otherwise echo
     if (function_exists('logger')) {
-        logger(join(" ", $args) . " - " . $message);
+        logger()(join(" ", $args) . " - " . $message);
     } else {
         echo $message . "\n";
     }
