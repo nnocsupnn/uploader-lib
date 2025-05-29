@@ -1,6 +1,6 @@
-# OCI Uploader 🚀
+# Maxicare Uploader 🚀
 
-A PHP library for uploading files to Oracle Cloud Infrastructure (OCI) Object Storage.
+A PHP library for uploading files supported cloud storage.
 
 
 ---
