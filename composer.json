@@ -1,13 +1,13 @@
 {
     "name": "maxicare/uploader",
     "type": "library",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "license": "MIT",
     "keywords": ["oci", "hubspot", "oracle", "cloud", "maxicare", "storage", "upload", "laravel"],
     "autoload": {
         "psr-4": {
             "Maxicare\\": "src/",
-            "Maxicare\\FileUploadInterface": "src/interface/"
+            "Maxicare\\FileUploadInterface\\": "src/interface/"
         },
         "files": [
             "src/functions.php"
