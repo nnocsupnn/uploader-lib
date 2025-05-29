@@ -207,7 +207,7 @@ class OCI implements FileUploadInterface
             "x-content-sha256: {$contentSha256}"
         ];
 
-        return executeCurlRequest($fullUrl, $method, $content, $headers);
+        return executeCurlRequest($fullUrl, $method, $content, $headers, __CLASS__);
     }
 
     /**
@@ -261,7 +261,7 @@ class OCI implements FileUploadInterface
             "Authorization: {$authHeader}"
         ];
 
-        return executeCurlRequest($fullUrl, $method, null, $headers);
+        return executeCurlRequest($fullUrl, $method, null, $headers, __CLASS__);
     }
 
     /**
@@ -293,7 +293,7 @@ class OCI implements FileUploadInterface
             "Authorization: {$authHeader}"
         ];
 
-        return executeCurlRequest($fullUrl, $method, null, $headers);
+        return executeCurlRequest($fullUrl, $method, null, $headers, __CLASS__);
     }
 
     /**
@@ -328,7 +328,7 @@ class OCI implements FileUploadInterface
             "Authorization: {$authHeader}"
         ];
 
-        return executeCurlRequest($fullUrl, $method, null, $headers);
+        return executeCurlRequest($fullUrl, $method, null, $headers, __CLASS__);
     }
 
 

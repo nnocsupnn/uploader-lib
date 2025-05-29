@@ -67,7 +67,7 @@ function getContentType(string $filename): string
  * 
  * Centralize curl exec
  */
-function executeCurlRequest(string $url, string $method, string|array|null $data, array $headers): array
+function executeCurlRequest(string $url, string $method, string|array|null $data, array $headers, ...$args): array
 {
     $ch = curl_init();
     
@@ -113,7 +113,7 @@ function executeCurlRequest(string $url, string $method, string|array|null $data
     }
 
     // Log results for debugging
-    logResult($method, $url, $result, __CLASS__);
+    logResult($method, $url, $result, $args);
 
     return $result;
 }

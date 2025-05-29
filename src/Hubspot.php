@@ -36,7 +36,7 @@ class Hubspot implements FileUploadInterface {
 
         $fullUrl = getenv('HUBSPOT_API_FILEUPLOAD') ?: 'https://api.hubapi.com/files/v3/files';
 
-        $result = executeCurlRequest($fullUrl, "POST", $payload, $headers);
+        $result = executeCurlRequest($fullUrl, "POST", $payload, $headers, __CLASS__);
 
         return $result;
     }
