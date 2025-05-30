@@ -15,11 +15,11 @@ class Hubspot implements FileUploadInterface {
     private $searchFiles = [];
 
     public function __construct() {
-        define('HUBSPOT_API_FILEUPLOAD', 'https://api.hubapi.com/files/v3/files');
-        define('HUBSPOT_API_SEARCH', 'https://api.hubapi.com/files/v3/files/search');
+        if (!defined('HUBSPOT_API_FILEUPLOAD')) define('HUBSPOT_API_FILEUPLOAD', 'https://api.hubapi.com/files/v3/files');
+        if (!defined('HUBSPOT_API_SEARCH'))define('HUBSPOT_API_SEARCH', 'https://api.hubapi.com/files/v3/files/search');
 
-        define('HUBSPOT_API_KEY', getenv('HUBSPOT_API_KEY') ?: null);
-        define('HUBSPOT_HEADER', array(
+        if (!defined('HUBSPOT_API_KEY')) define('HUBSPOT_API_KEY', getenv('HUBSPOT_API_KEY') ?: null);
+        if (!defined('HUBSPOT_HEADER')) define('HUBSPOT_HEADER', array(
             'Authorization: Bearer ' . HUBSPOT_API_KEY
         ));
 
@@ -59,9 +59,17 @@ class Hubspot implements FileUploadInterface {
      * Files
      * @param string $folderId Search by filtering to folderId
      * @param string $search Search contains filename
+     * @param string $id Search by id
      */
-    public function files(String $folderId, String $search) {
-        $this->searchFiles = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query(["parentFolderIds" => $folderId, "name" => $search]), "GET", null, HUBSPOT_HEADER, __CLASS__);
+    public function files(String $folderId, String|null $search = null, String|null $id = null) {
+        $params = ["parentFolderIds" => $folderId];
+
+        if ($id != null) $params = [...$params, "id" => $id];
+        if ($search != null) $params = [...$params, "search" => $search];
+
+        dump($params);
+
+        $this->searchFiles = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query($params), "GET", null, HUBSPOT_HEADER, __CLASS__);
         return $this;
     }
 
