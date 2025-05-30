@@ -12,6 +12,7 @@ use Maxicare\Interface\FileUploadInterface;
  * 
  */
 class Hubspot implements FileUploadInterface {
+    private $searchFiles = [];
 
     public function __construct() {
         define('HUBSPOT_API_FILEUPLOAD', 'https://api.hubapi.com/files/v3/files');
@@ -60,12 +61,20 @@ class Hubspot implements FileUploadInterface {
      * @param string $search Search contains filename
      */
     public function files(String $folderId, String $search) {
-        $result = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query(["parentFolderIds" => $folderId]), "GET", null, HUBSPOT_HEADER, __CLASS__);
+        $this->searchFiles = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query(["parentFolderIds" => $folderId, "name" => $search]), "GET", null, HUBSPOT_HEADER, __CLASS__);
+        return $this;
+    }
 
-        $filtered = json_decode($result['response'], true);
+    public function results() {
+        return json_decode($this->searchFiles['response']);
+    }
 
-        return array_filter($filtered['results'], function($obj) use ($search) {
-            return str_contains($obj['name'], $search);
-        });
+    public function next() {
+        if (array_key_exists("paging", $this->searchFiles)) {
+            $nextUri = $this->searchFiles['paging']['next']['link'] ?: null;
+            $this->searchFiles = executeCurlRequest($nextUri, "GET", null, HUBSPOT_HEADER, __CLASS__);
+        }
+
+        return $this;
     }
 }
