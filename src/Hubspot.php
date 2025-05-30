@@ -67,8 +67,6 @@ class Hubspot implements FileUploadInterface {
         if ($id != null) $params = [...$params, "id" => $id];
         if ($search != null) $params = [...$params, "search" => $search];
 
-        dump($params);
-
         $this->searchFiles = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query($params), "GET", null, HUBSPOT_HEADER, __CLASS__);
         return $this;
     }
