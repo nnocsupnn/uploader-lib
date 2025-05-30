@@ -77,4 +77,13 @@ class Hubspot implements FileUploadInterface {
 
         return $this;
     }
+
+    public function prev() {
+        if (array_key_exists("paging", $this->searchFiles)) {
+            $nextUri = $this->searchFiles['paging']['prev']['link'] ?: null;
+            $this->searchFiles = executeCurlRequest($nextUri, "GET", null, HUBSPOT_HEADER, __CLASS__);
+        }
+
+        return $this;
+    }
 }
