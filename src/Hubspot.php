@@ -16,7 +16,8 @@ class Hubspot implements FileUploadInterface {
 
     public function __construct() {
         if (!defined('HUBSPOT_API_FILEUPLOAD')) define('HUBSPOT_API_FILEUPLOAD', 'https://api.hubapi.com/files/v3/files');
-        if (!defined('HUBSPOT_API_SEARCH'))define('HUBSPOT_API_SEARCH', 'https://api.hubapi.com/files/v3/files/search');
+        if (!defined('HUBSPOT_API_SEARCH')) define('HUBSPOT_API_SEARCH', 'https://api.hubapi.com/files/v3/files/search');
+        if (!defined('HUBSPOT_API_DELETE')) define('HUBSPOT_API_DELETE', 'https://api.hubapi.com/files/v3/files');
 
         if (!defined('HUBSPOT_API_KEY')) define('HUBSPOT_API_KEY', getenv('HUBSPOT_API_KEY') ?: null);
         if (!defined('HUBSPOT_HEADER')) define('HUBSPOT_HEADER', array(
@@ -36,23 +37,40 @@ class Hubspot implements FileUploadInterface {
      * Upload to hubspot
      * 
      * @reference https://developers.hubspot.com/docs/reference/api/library/files/v3#post-%2Ffiles%2Fv3%2Ffiles
+     * 
+     * @param String $filePath path of the file
+     * @param String $folderId Folder id from the hubspot files
+     * @param String $filename Desired Filename
+     * 
+     * @version 1.1.7
      */
-    public function upload(String $filePath, String $folderId) {
+    public function upload(String $filePath, String $folderId, ?String $filename = null) {
         $hubspotFileUploadOption = [
             "access" => "PRIVATE",
             "overwrite" => true,
             "duplicateValidationStrategy" => "NONE"
         ];
 
-        $payload = array('file'=> new CURLFile($filePath), 'folderId' => $folderId, 'options' => json_encode($hubspotFileUploadOption));
+        $payload = array(
+            'file'=> new CURLFile($filePath), 
+            'folderId' => $folderId, 
+            'options' => json_encode($hubspotFileUploadOption)
+        );
+
+        if ($filename != null) $payload = [...$payload, "filename" => $filename];
         $result = executeCurlRequest(HUBSPOT_API_FILEUPLOAD, "POST", $payload, HUBSPOT_HEADER, __CLASS__);
 
         return $result;
     }
 
 
+    /**
+     * Delete file in hubspot
+     * @param String $fileId Id from the hubspot api.
+     */
     public function delete(String $fileId) {
-        // TODO
+        $result = executeCurlRequest(HUBSPOT_API_DELETE . "/$fileId", "DELETE", null, HUBSPOT_HEADER, __CLASS__);
+        return $result;
     }
 
     /**
