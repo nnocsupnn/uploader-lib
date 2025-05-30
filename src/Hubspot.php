@@ -3,7 +3,7 @@
 namespace Maxicare;
 
 use CURLFile;
-use Exception;
+use InvalidArgumentException;
 use Maxicare\Interface\FileUploadInterface;
 
 /**
@@ -14,6 +14,21 @@ use Maxicare\Interface\FileUploadInterface;
 class Hubspot implements FileUploadInterface {
 
     public function __construct() {
+        define('HUBSPOT_API_FILEUPLOAD', 'https://api.hubapi.com/files/v3/files');
+        define('HUBSPOT_API_SEARCH', 'https://api.hubapi.com/files/v3/files/search');
+
+        define('HUBSPOT_API_KEY', getenv('HUBSPOT_API_KEY') ?: null);
+        define('HUBSPOT_HEADER', array(
+            'Authorization: Bearer ' . HUBSPOT_API_KEY
+        ));
+
+        $this->validateVars();
+    }
+
+    private function validateVars() {
+        if (HUBSPOT_API_KEY === null) {
+            throw new InvalidArgumentException("Environment variable HUBSPOT_API_KEY is not set");
+        }
     }
 
     /**
@@ -29,13 +44,7 @@ class Hubspot implements FileUploadInterface {
         ];
 
         $payload = array('file'=> new CURLFile($filePath), 'folderId' => $folderId, 'options' => json_encode($hubspotFileUploadOption));
-        $headers = array(
-            'Authorization: Bearer ' . getenv('HUBSPOT_API_KEY') ?: null
-        );
-
-        $fullUrl = getenv('HUBSPOT_API_FILEUPLOAD') ?: 'https://api.hubapi.com/files/v3/files';
-
-        $result = executeCurlRequest($fullUrl, "POST", $payload, $headers, __CLASS__);
+        $result = executeCurlRequest(HUBSPOT_API_FILEUPLOAD, "POST", $payload, HUBSPOT_HEADER, __CLASS__);
 
         return $result;
     }
@@ -43,5 +52,20 @@ class Hubspot implements FileUploadInterface {
 
     public function delete(String $fileId) {
         // TODO
+    }
+
+    /**
+     * Files
+     * @param string $folderId Search by filtering to folderId
+     * @param string $search Search contains filename
+     */
+    public function files(String $folderId, String $search) {
+        $result = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query(["parentFolderIds" => $folderId]), "GET", null, HUBSPOT_HEADER, __CLASS__);
+
+        $filtered = json_decode($result['response'], true);
+
+        return array_filter($filtered['results'], function($obj) use ($search) {
+            return str_contains($obj['name'], $search);
+        });
     }
 }
