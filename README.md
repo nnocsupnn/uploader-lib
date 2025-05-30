@@ -66,8 +66,11 @@ namespace MyLaravelApp;
 use Maxicare\Hubspot;
 
 public function testUpload() {
-    $ociUploader = new Hubspot();
-    $ociUploader->upload(base_path() . "/.dummy/dog.png", "folderId1234"); # Upload using contents to OCI
+    $hubspot = new Hubspot();
+    $hubspot->upload(base_path() . "/.dummy/dog.png", "folderId1234"); # Upload using contents to OCI
+
+    $files = $hubspot->files("folderId1234", "sometext_name")->results();
+    $filesNext = $hubspot->files("folderId1234", "sometext_name")->next()->results();
 }
 
 ```
