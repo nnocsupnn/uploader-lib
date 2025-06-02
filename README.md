@@ -23,7 +23,9 @@ OCI_KEY_FILE=path/to/private_key.pem
 
 ```php
 HUBSPOT_API_KEY=
-HUBSPOT_API_FILEUPLOAD=
+HUBSPOT_API_FILEUPLOAD= # optional, fallback value is the public api endpoints of hubspot
+HUBSPOT_API_DELETE= # optional, fallback value is the public api endpoints of hubspot
+HUBSPOT_API_SEARCH= # optional, fallback value is the public api endpoints of hubspot
 ```
 ---
 ### ℹ️ Installation [🔗 Packagist](https://packagist.org/packages/maxicare/uploader)
