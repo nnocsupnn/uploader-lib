@@ -57,7 +57,7 @@ class Hubspot implements FileUploadInterface {
             'options' => json_encode($hubspotFileUploadOption)
         );
 
-        if ($filename != null) $payload = [...$payload, "filename" => $filename];
+        if ($filename != null) $payload = [...$payload, "fileName" => $filename];
         $result = executeCurlRequest(HUBSPOT_API_FILEUPLOAD, "POST", $payload, HUBSPOT_HEADER, __CLASS__);
 
         return $result;
