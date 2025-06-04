@@ -118,15 +118,14 @@ class Hubspot implements FileUploadInterface {
      * @param String $folderId FolderID of the folder you want to cleanup.
      */
     public function deleteAllByFolderId(String $folderId) {
+        set_time_limit(300); // 5mins
         $res = $this->files($folderId, null, null, 100);
         $ids = array_column($res->results()->results, "id");
         do {
             // Delete
             foreach ($ids as $id) {
-                // $this->delete($id);
+                $this->delete($id);
             }
-
-            dump(count($res->results()->results));
         } while ($res->next());
 
         return $ids;
