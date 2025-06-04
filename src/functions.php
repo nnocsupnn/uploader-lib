@@ -106,9 +106,9 @@ function executeCurlRequest(string $url, string $method, string|array|null $data
 
     // Parse JSON response if applicable
     if ($response && str_contains($curlInfo['content_type'] ?? '', 'json')) {
-        $decoded = json_decode($response, true);
+        $decoded = json_decode($response);
         if (json_last_error() === JSON_ERROR_NONE) {
-            $result['data'] = $decoded;
+            $result['response'] = $decoded;
         }
     }
 

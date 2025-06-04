@@ -78,36 +78,57 @@ class Hubspot implements FileUploadInterface {
      * @param string $folderId Search by filtering to folderId
      * @param string $search Search contains filename
      * @param string $id Search by id
+     * @param int $limit Limit of the results (max 100)
      */
-    public function files(String $folderId, String|null $search = null, String|null $id = null) {
+    public function files(String $folderId, String|null $search = null, String|null $id = null, Int $limit = 10) {
         $params = ["parentFolderIds" => $folderId];
 
         if ($id != null) $params = [...$params, "id" => $id];
         if ($search != null) $params = [...$params, "search" => $search];
+        if ($limit != null) $params = [...$params, "limit" => $limit];
 
         $this->searchFiles = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query($params), "GET", null, HUBSPOT_HEADER, __CLASS__);
         return $this;
     }
 
     public function results() {
-        return json_decode($this->searchFiles['response']);
+        return $this->searchFiles['response'];
     }
 
     public function next() {
-        if (array_key_exists("paging", $this->searchFiles)) {
-            $nextUri = $this->searchFiles['paging']['next']['link'] ?: null;
-            $this->searchFiles = executeCurlRequest($nextUri, "GET", null, HUBSPOT_HEADER, __CLASS__);
-        }
+        if (!property_exists($this->searchFiles['response'], "paging")) return false;
+
+        $nextUri = $this->searchFiles['response']->paging->next->link ?: null;
+        $this->searchFiles = executeCurlRequest($nextUri, "GET", null, HUBSPOT_HEADER, __CLASS__);
 
         return $this;
     }
 
     public function prev() {
-        if (array_key_exists("paging", $this->searchFiles)) {
-            $nextUri = $this->searchFiles['paging']['prev']['link'] ?: null;
-            $this->searchFiles = executeCurlRequest($nextUri, "GET", null, HUBSPOT_HEADER, __CLASS__);
-        }
+        if (property_exists($this->searchFiles['response'], "paging")) return false;
+
+        $nextUri = $this->searchFiles['response']->paging->prev->link ?: null;
+        $this->searchFiles = executeCurlRequest($nextUri, "GET", null, HUBSPOT_HEADER, __CLASS__);
 
         return $this;
+    }
+
+    /**
+     * Delete files under folderId
+     * @param String $folderId FolderID of the folder you want to cleanup.
+     */
+    public function deleteAllByFolderId(String $folderId) {
+        $res = $this->files($folderId, null, null, 100);
+        $ids = array_column($res->results()->results, "id");
+        do {
+            // Delete
+            foreach ($ids as $id) {
+                // $this->delete($id);
+            }
+
+            dump(count($res->results()->results));
+        } while ($res->next());
+
+        return $ids;
     }
 }
