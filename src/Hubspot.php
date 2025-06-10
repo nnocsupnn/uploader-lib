@@ -84,7 +84,7 @@ class Hubspot implements FileUploadInterface {
         $params = ["parentFolderIds" => $folderId];
 
         if ($id != null) $params = [...$params, "id" => $id];
-        if ($search != null) $params = [...$params, "search" => $search];
+        if ($search != null) $params = [...$params, "name" => $search];
         if ($limit != null) $params = [...$params, "limit" => $limit];
 
         $this->searchFiles = executeCurlRequest(HUBSPOT_API_SEARCH . "?" . http_build_query($params), "GET", null, HUBSPOT_HEADER, __CLASS__);
