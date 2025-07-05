@@ -2,7 +2,7 @@
     "name": "maxicare/uploader",
     "type": "library",
     "description": "A PHP Library for uploading files to cloud. Maintained and Developed by Maxicare IT Team",
-    "version": "1.1.10",
+    "version": "1.1.11",
     "license": "MIT",
     "keywords": ["oci", "hubspot", "oracle", "cloud", "maxicare", "storage", "upload", "laravel"],
     "autoload": {
