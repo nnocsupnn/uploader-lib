@@ -28,7 +28,7 @@ function logResult(string $method, string $url, array $result, ...$args): void
     $message = "{$status} {$method} {$url} - Status: {$result['status_code']}";
     
     if (!$result['success'] && $result['response']) {
-        $message .= " - Error: " . substr($result['response'] ?? "", 0, 200);
+        $message .= " - Error: " . substr(json_encode($result['response']) ?? "", 0, 200);
     }
 
     // Use Laravel's logger if available, otherwise echo
